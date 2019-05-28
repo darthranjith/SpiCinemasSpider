@@ -5,6 +5,7 @@ import smtplib
 from email.mime.text import MIMEText
 import threading
 import time
+import winsound
 
 class NewFilmSpiderSpider(scrapy.Spider):
     name = 'new_film_spider'
@@ -17,24 +18,13 @@ class NewFilmSpiderSpider(scrapy.Spider):
 
     def getDetails(self, response):
         while True:
-            FROM_ADDRESS = 'xxx@gmail.com'
-            PASSWORD = 'xxx'
-            TO_ADDRESS= 'xxx@gmail.com'
-            HOST='smtp.gmail.com'
-            PORT=587
             records = response.xpath('//section[@class="main-section"]/section[2]/section[@class="movie__listing now-showing"]/ul/li/div/dl/dt/a/text()').extract()
-            if 'xxx' in str(records):
-                receivers = [TO_ADDRESS]
-                msg="Booking Opened"
+            if 'NGK' in str(records):
                 try:
-                    smtpObj = smtplib.SMTP(HOST,PORT)
-                    smtpObj.set_debuglevel(1)
-                    smtpObj.ehlo()
-                    smtpObj.starttls()
-                    smtpObj.login(FROM_ADDRESS,PASSWORD)
-                    smtpObj.sendmail(FROM_ADDRESS, receivers, msg)   
-                    smtpObj.quit()      
-                    print "Successfully sent email"
+                    print("Booking Opened")
+                    winsound.PlaySound('alert.wav', winsound.SND_FILENAME)
                 except Exception:
-                    print "Error: unable to send email"
+                    print ("Error: unable to play sound")
+            else:
+                print("Booking Not Opened")
             time.sleep(10)
